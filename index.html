@@ -39,17 +39,17 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: clamp(1.5rem, 5vw, 3rem) clamp(1.2rem, 5vw, 3rem) 0;
+      padding: clamp(1.5rem, 5vw, 3rem) clamp(1.75rem, 6vw, 3rem) 0;
     }
 
     h1 {
-      font-family: "columbia-titling", "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
-      font-size: clamp(2.4rem, 7vw, 4rem);
+      font-family: "columbia-titling", "columbia", Georgia, "Times New Roman", serif;
+      font-size: clamp(1.2rem, 3.5vw, 2rem);
       font-weight: 400;
-      font-style: italic;
+      font-style: normal;
       letter-spacing: 0.005em;
       color: var(--brown);
-      line-height: 1.05;
+      line-height: 1.1;
     }
 
     .nav-links {
@@ -96,7 +96,7 @@
 
     /* ── INPUT ──────────────────────────────────────── */
     .add-wrap {
-      padding: clamp(1.2rem, 4vw, 2rem) clamp(1.2rem, 5vw, 3rem) 0;
+      padding: clamp(1.2rem, 4vw, 2rem) clamp(1.75rem, 6vw, 3rem) 0;
     }
 
     .add-row {
@@ -108,11 +108,11 @@
 
     .add-row input {
       flex: 1;
-      font-family: "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
-      font-style: italic;
-      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      font-family: "interstate", "Helvetica Neue", Arial, sans-serif;
+      font-style: normal;
+      font-size: clamp(1rem, 2.2vw, 1.1rem);
       font-weight: 400;
-      letter-spacing: 0;
+      letter-spacing: 0.02em;
       text-transform: none;
       color: var(--muted);
       background: transparent;
@@ -126,7 +126,7 @@
 
     /* ── LIST ───────────────────────────────────────── */
     .list-wrap {
-      padding: clamp(0.8rem, 3vw, 1.5rem) clamp(1.2rem, 5vw, 3rem);
+      padding: clamp(0.8rem, 3vw, 1.5rem) clamp(1.75rem, 6vw, 3rem);
     }
 
     ul.todo-list { list-style: none; }
@@ -185,13 +185,16 @@
       display: block;
     }
 
-    /* defer row — quiet sidenote of italic serif links */
+    /* defer row */
     .item-actions {
-      font-family: "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
-      font-style: italic;
-      font-size: clamp(0.78rem, 1.9vw, 0.92rem);
+      font-family: "interstate-condensed", "interstate", "Arial Narrow", Arial, sans-serif;
+      font-style: normal;
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       color: var(--muted);
-      margin-top: 0.35rem;
+      margin-top: 0.45rem;
       line-height: 1.4;
       opacity: 0;
       pointer-events: none;
@@ -204,25 +207,20 @@
 
     li.todo-item.expanded .item-actions { opacity: 1; pointer-events: auto; }
 
-    .defer-label {
-      margin-right: 0.35em;
-      color: var(--muted);
-    }
-
     .defer-sep {
       display: inline-block;
-      margin: 0 0.45em;
+      margin: 0 0.55em;
       color: var(--muted);
-      opacity: 0.7;
+      opacity: 0.6;
     }
 
     .btn-defer {
       font-family: inherit;
-      font-style: italic;
+      font-style: inherit;
       font-size: inherit;
-      font-weight: 400;
-      letter-spacing: 0;
-      text-transform: none;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
       background: transparent;
       border: none;
       color: var(--ink);
@@ -385,6 +383,9 @@
     .modal .actions button.primary { color: var(--green); }
 
     @media (max-width: 430px) {
+      .topbar   { padding-left: 1.75rem; padding-right: 1.5rem; }
+      .add-wrap { padding-left: 1.75rem; padding-right: 1.5rem; }
+      .list-wrap { padding-left: 1.75rem; padding-right: 1.5rem; }
       .check-btn { width: 1.5rem; height: 1.5rem; }
       li.todo-item { padding: 1rem 0; gap: 1rem; }
       .item-actions { opacity: 1; pointer-events: auto; }
@@ -738,7 +739,7 @@
             <span class="item-text">${esc(item.text)}</span>
             ${!isDone ? `
             <div class="item-actions">
-              <span class="defer-label">defer to</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 1)">tomorrow</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 7)">next week</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 30)">next month</button>
+              <button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 1)">Tomorrow</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 7)">Next Week</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 30)">Next Month</button>
             </div>` : ''}
           </div>
           <button class="btn-delete" onclick="event.stopPropagation(); deleteItem(${item.id})">✕</button>
