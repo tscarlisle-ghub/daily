@@ -23,7 +23,8 @@
       "id": 1779451144276,
       "text": "contract for larussa",
       "done": false,
-      "deferUntil": null
+      "deferUntil": 1779512400000,
+      "completedAt": null
     },
     {
       "id": 1779451133748,
