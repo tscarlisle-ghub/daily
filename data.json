@@ -29,7 +29,8 @@
       "id": 1779451133748,
       "text": "look at magnolia",
       "done": false,
-      "deferUntil": null
+      "deferUntil": 1780030800000,
+      "completedAt": null
     },
     {
       "id": 1779450677271,
