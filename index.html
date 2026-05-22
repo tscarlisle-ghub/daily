@@ -134,9 +134,8 @@
     li.todo-item {
       display: flex;
       align-items: flex-start;
-      gap: clamp(0.8rem, 2.5vw, 1.4rem);
-      padding: clamp(0.95rem, 2.5vw, 1.3rem) 0;
-      border-bottom: 1px solid rgba(107,58,31,0.08);
+      gap: clamp(0.7rem, 2vw, 1.1rem);
+      padding: clamp(0.45rem, 1.3vw, 0.6rem) 0;
       position: relative;
     }
 
@@ -147,13 +146,13 @@
 
     .check-btn {
       flex-shrink: 0;
-      width: clamp(1.1rem, 3vw, 1.4rem);
-      height: clamp(1.1rem, 3vw, 1.4rem);
+      width: clamp(0.78rem, 2.1vw, 0.98rem);
+      height: clamp(0.78rem, 2.1vw, 0.98rem);
       border-radius: 50%;
-      border: 2px solid var(--brown);
+      border: 1.5px solid var(--brown);
       background: transparent;
       cursor: pointer;
-      margin-top: 0.3em;
+      margin-top: 0.45em;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -190,7 +189,7 @@
       font-family: "interstate-condensed", "interstate", "Arial Narrow", Arial, sans-serif;
       font-style: normal;
       font-size: clamp(0.95rem, 2.2vw, 1.1rem);
-      font-weight: 500;
+      font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
@@ -211,7 +210,7 @@
       display: inline-block;
       margin: 0 0.55em;
       color: var(--muted);
-      opacity: 0.6;
+      opacity: 0.55;
     }
 
     .btn-defer {
@@ -230,23 +229,7 @@
       transition: color 0.15s;
     }
     .btn-defer:hover, .btn-defer:active { color: var(--green); }
-
-    .btn-delete {
-      flex-shrink: 0;
-      background: transparent;
-      border: none;
-      font-size: clamp(0.85rem, 2vw, 1rem);
-      color: transparent;
-      cursor: pointer;
-      padding: 0.3em 0.2em;
-      margin-top: 0.15em;
-      line-height: 1;
-      transition: color 0.15s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    li.todo-item:hover .btn-delete,
-    li.todo-item.expanded .btn-delete { color: var(--muted); }
-    .btn-delete:hover, .btn-delete:active { color: var(--brown) !important; }
+    .btn-defer.danger:hover, .btn-defer.danger:active { color: #a8392a; }
 
     .section-label {
       font-family: "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
@@ -273,9 +256,9 @@
       padding-left: clamp(1.8rem, 5vw, 2.8rem);
     }
 
-    .deferred-section { margin-top: 2.5rem; }
+    .collapsible-section { margin-top: 2.5rem; }
 
-    .deferred-toggle {
+    .collapsible-toggle {
       font-family: "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
       font-size: clamp(0.85rem, 2vw, 1rem);
       font-style: italic;
@@ -294,10 +277,10 @@
       justify-content: space-between;
       align-items: center;
     }
-    .deferred-toggle:hover { color: var(--brown); }
+    .collapsible-toggle:hover { color: var(--brown); }
 
-    .deferred-list { display: none; }
-    .deferred-list.open { display: block; }
+    .collapsible-list { display: none; }
+    .collapsible-list.open { display: block; }
 
     /* ── SETTINGS MODAL ─────────────────────────────── */
     .modal-backdrop {
@@ -386,17 +369,15 @@
       .topbar   { padding-left: 1.75rem; padding-right: 1.5rem; }
       .add-wrap { padding-left: 1.75rem; padding-right: 1.5rem; }
       .list-wrap { padding-left: 1.75rem; padding-right: 1.5rem; }
-      .check-btn { width: 1.5rem; height: 1.5rem; }
-      li.todo-item { padding: 1rem 0; gap: 1rem; }
+      .check-btn { width: 1.05rem; height: 1.05rem; }
+      li.todo-item { padding: 0.5rem 0; gap: 0.8rem; }
       .item-actions { opacity: 1; pointer-events: auto; }
-      .btn-delete { color: var(--muted) !important; }
     }
 
     @media (max-width: 932px) and (orientation: landscape) {
-      h1 { font-size: clamp(1.8rem, 5vw, 3rem); }
-      li.todo-item { padding: 0.7rem 0; }
+      h1 { font-size: clamp(1.1rem, 3vw, 1.6rem); }
+      li.todo-item { padding: 0.4rem 0; }
       .item-actions { opacity: 1; pointer-events: auto; }
-      .btn-delete { color: var(--muted) !important; }
     }
   </style>
 </head>
@@ -659,6 +640,9 @@
     return Date.now() >= item.deferUntil;
   }
 
+  const RECENT_DONE_MS = 30 * 1000;
+  let archiveCleanupTimer = null;
+
   function addItem(text) {
     if (!text.trim()) return;
     items.unshift({ id: Date.now(), text: text.trim(), done: false, deferUntil: null });
@@ -667,7 +651,16 @@
   }
   function toggleDone(id) {
     const item = items.find(i => i.id === id);
-    if (item) item.done = !item.done;
+    if (!item) return;
+    item.done = !item.done;
+    if (item.done) {
+      item.completedAt = Date.now();
+      // re-render after the 30s grace so this item slides into the archive
+      if (archiveCleanupTimer) clearTimeout(archiveCleanupTimer);
+      archiveCleanupTimer = setTimeout(render, RECENT_DONE_MS + 200);
+    } else {
+      item.completedAt = null;
+    }
     pushSoon();
     render();
   }
@@ -678,7 +671,13 @@
   }
   function defer(id, days) {
     const item = items.find(i => i.id === id);
-    if (item) { item.deferUntil = addDays(days); item.done = false; }
+    if (item) { item.deferUntil = addDays(days); item.done = false; item.completedAt = null; }
+    pushSoon();
+    render();
+  }
+  function bringToToday(id) {
+    const item = items.find(i => i.id === id);
+    if (item) { item.deferUntil = null; item.done = false; item.completedAt = null; }
     pushSoon();
     render();
   }
@@ -686,33 +685,47 @@
 
   // ── RENDER ────────────────────────────────────────
   function render() {
+    const now      = Date.now();
     const active   = items.filter(i => !i.done && isVisible(i));
-    const done     = items.filter(i =>  i.done);
+    const recent   = items.filter(i =>  i.done &&  i.completedAt && (now - i.completedAt) <  RECENT_DONE_MS);
+    const archive  = items.filter(i =>  i.done && (!i.completedAt || (now - i.completedAt) >= RECENT_DONE_MS));
     const deferred = items.filter(i => !i.done && !isVisible(i));
 
     const container = document.getElementById('list-container');
     let html = '';
 
-    if (active.length === 0 && done.length === 0) {
+    if (active.length === 0 && recent.length === 0 && archive.length === 0 && deferred.length === 0) {
       html += '<p class="empty">Nothing here yet.</p>';
     } else {
-      html += buildList(active, false);
+      html += buildList(active, 'active');
     }
 
-    if (done.length) {
-      html += '<p class="section-label">Completed</p>';
-      html += buildList(done, true);
+    if (recent.length) {
+      html += buildList(recent, 'recent');
+    }
+
+    if (archive.length) {
+      html += `
+        <div class="collapsible-section">
+          <button class="collapsible-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.arrow').textContent = this.nextElementSibling.classList.contains('open') ? '−' : '+'">
+            <span>Completed (${archive.length})</span>
+            <span class="arrow">+</span>
+          </button>
+          <div class="collapsible-list">
+            ${buildList(archive, 'archive')}
+          </div>
+        </div>`;
     }
 
     if (deferred.length) {
       html += `
-        <div class="deferred-section">
-          <button class="deferred-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.arrow').textContent = this.nextElementSibling.classList.contains('open') ? '−' : '+'">
+        <div class="collapsible-section">
+          <button class="collapsible-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.arrow').textContent = this.nextElementSibling.classList.contains('open') ? '−' : '+'">
             <span>Deferred (${deferred.length})</span>
             <span class="arrow">+</span>
           </button>
-          <div class="deferred-list">
-            ${buildList(deferred, false)}
+          <div class="collapsible-list">
+            ${buildList(deferred, 'deferred')}
           </div>
         </div>`;
     }
@@ -727,23 +740,39 @@
     });
   }
 
-  function buildList(list, isDone) {
+  function buildList(list, kind) {
     if (!list.length) return '';
+    const isDone = kind === 'recent' || kind === 'archive';
     return `<ul class="todo-list">` +
-      list.map(item => `
+      list.map(item => {
+        let actions = '';
+        if (kind === 'active') {
+          actions = `
+            <div class="item-actions">
+              <button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 1)">Tomorrow</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 7)">Next Week</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 30)">Next Month</button><span class="defer-sep">·</span><button class="btn-defer danger" onclick="event.stopPropagation(); deleteItem(${item.id})">Delete</button>
+            </div>`;
+        } else if (kind === 'deferred') {
+          actions = `
+            <div class="item-actions">
+              <button class="btn-defer" onclick="event.stopPropagation(); bringToToday(${item.id})">Today</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 1)">Tomorrow</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 7)">Next Week</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 30)">Next Month</button><span class="defer-sep">·</span><button class="btn-defer danger" onclick="event.stopPropagation(); deleteItem(${item.id})">Delete</button>
+            </div>`;
+        } else if (kind === 'archive') {
+          actions = `
+            <div class="item-actions">
+              <button class="btn-defer danger" onclick="event.stopPropagation(); deleteItem(${item.id})">Delete</button>
+            </div>`;
+        }
+        return `
         <li class="todo-item${isDone ? ' done' : ''}">
           <button class="check-btn" onclick="event.stopPropagation(); toggleDone(${item.id})">
             <span class="check-dot"></span>
           </button>
           <div class="item-body">
             <span class="item-text">${esc(item.text)}</span>
-            ${!isDone ? `
-            <div class="item-actions">
-              <button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 1)">Tomorrow</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 7)">Next Week</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 30)">Next Month</button>
-            </div>` : ''}
+            ${actions}
           </div>
-          <button class="btn-delete" onclick="event.stopPropagation(); deleteItem(${item.id})">✕</button>
-        </li>`).join('') +
+        </li>`;
+      }).join('') +
     `</ul>`;
   }
 
