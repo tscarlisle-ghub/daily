@@ -18,7 +18,8 @@
       "id": 1779451192523,
       "text": "contract for neerhof",
       "done": false,
-      "deferUntil": null
+      "deferUntil": 1779512400000,
+      "completedAt": null
     },
     {
       "id": 1779451144276,
