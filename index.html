@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>The Daily List</title>
+  <link rel="stylesheet" href="https://use.typekit.net/ikf0hkb.css" />
+  <style>
+    :root {
+      --bg:     #e8e4db;
+      --brown:  #6b3a1f;
+      --muted:  #b8a898;
+      --green:  #4a6e2a;
+      --ink:    #3a2a1a;
+      --radius: 0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--brown);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: "acumin-pro-condensed", "acumin-pro", "Arial Narrow", Arial, sans-serif;
+    }
+
+    /* ── LAYOUT ─────────────────────────────────────── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+    }
+
+    /* top bar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: clamp(1.5rem, 5vw, 3rem) clamp(1.2rem, 5vw, 3rem) 0;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 7vw, 4.2rem);
+      font-weight: 800;
+      font-style: italic;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--brown);
+      line-height: 1;
+    }
+
+    .nav-links {
+      text-align: right;
+      font-size: clamp(0.55rem, 1.4vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      line-height: 2;
+      padding-top: 0.4rem;
+      user-select: none;
+    }
+
+    /* ── INPUT ──────────────────────────────────────── */
+    .add-wrap {
+      padding: clamp(1.2rem, 4vw, 2rem) clamp(1.2rem, 5vw, 3rem) 0;
+    }
+
+    .add-row {
+      display: flex;
+      align-items: baseline;
+      border-bottom: 1px dotted var(--muted);
+      padding-bottom: 0.45em;
+    }
+
+    .add-row input {
+      flex: 1;
+      font-family: inherit;
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      outline: none;
+      caret-color: var(--brown);
+    }
+
+    .add-row input::placeholder { color: var(--muted); }
+    .add-row input:focus { color: var(--brown); }
+
+    /* ── LIST ───────────────────────────────────────── */
+    .list-wrap {
+      padding: clamp(0.8rem, 3vw, 1.5rem) clamp(1.2rem, 5vw, 3rem);
+    }
+
+    ul.todo-list {
+      list-style: none;
+    }
+
+    li.todo-item {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(0.8rem, 2.5vw, 1.4rem);
+      padding: clamp(0.9rem, 2.5vw, 1.2rem) 0;
+      border-bottom: 1px solid rgba(107,58,31,0.12);
+      position: relative;
+    }
+
+    li.todo-item.done .item-text {
+      text-decoration: line-through;
+      opacity: 0.4;
+    }
+
+    /* circle */
+    .check-btn {
+      flex-shrink: 0;
+      width: clamp(1.1rem, 3vw, 1.4rem);
+      height: clamp(1.1rem, 3vw, 1.4rem);
+      border-radius: 50%;
+      border: 2px solid var(--brown);
+      background: transparent;
+      cursor: pointer;
+      margin-top: 0.3em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .check-btn:active, .check-btn:hover { background: var(--brown); }
+    li.done .check-btn { background: var(--muted); border-color: var(--muted); }
+
+    .check-dot {
+      width: 38%;
+      height: 38%;
+      border-radius: 50%;
+      background: var(--bg);
+      display: none;
+    }
+    li.done .check-dot { display: block; }
+
+    /* text */
+    .item-body { flex: 1; min-width: 0; }
+
+    .item-text {
+      font-size: clamp(1.15rem, 3.5vw, 1.6rem);
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--brown);
+      word-break: break-word;
+      line-height: 1.25;
+      display: block;
+    }
+
+    /* defer actions — tap/hover to reveal */
+    .item-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.1rem;
+      margin-top: 0.55rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s;
+    }
+
+    /* show on hover (desktop) */
+    @media (hover: hover) {
+      li.todo-item:hover .item-actions { opacity: 1; pointer-events: auto; }
+    }
+
+    /* show when expanded (mobile tap) */
+    li.todo-item.expanded .item-actions { opacity: 1; pointer-events: auto; }
+
+    .btn-defer {
+      font-family: inherit;
+      font-size: clamp(0.62rem, 1.6vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: transparent;
+      border: none;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 0.15em 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-defer:first-child { color: var(--green); }
+    .btn-defer:hover, .btn-defer:active { color: var(--green); }
+
+    /* delete */
+    .btn-delete {
+      flex-shrink: 0;
+      background: transparent;
+      border: none;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      color: transparent;
+      cursor: pointer;
+      padding: 0.3em 0.2em;
+      margin-top: 0.15em;
+      line-height: 1;
+      transition: color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    li.todo-item:hover .btn-delete,
+    li.todo-item.expanded .btn-delete { color: var(--muted); }
+    .btn-delete:hover, .btn-delete:active { color: var(--brown) !important; }
+
+    /* ── SECTIONS ───────────────────────────────────── */
+    .section-label {
+      font-size: clamp(0.58rem, 1.4vw, 0.68rem);
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 2rem 0 0.4rem;
+      padding-bottom: 0.4em;
+      border-bottom: 1px solid rgba(107,58,31,0.2);
+    }
+
+    .empty {
+      font-size: clamp(0.75rem, 2vw, 0.85rem);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2rem;
+      padding-left: clamp(1.8rem, 5vw, 2.8rem);
+    }
+
+    /* ── DEFERRED VIEW ──────────────────────────────── */
+    .deferred-section { margin-top: 2.5rem; }
+
+    .deferred-toggle {
+      font-family: inherit;
+      font-size: clamp(0.58rem, 1.4vw, 0.68rem);
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(107,58,31,0.2);
+      width: 100%;
+      text-align: left;
+      padding-bottom: 0.4em;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .deferred-toggle:hover { color: var(--brown); }
+
+    .deferred-list { display: none; }
+    .deferred-list.open { display: block; }
+
+    /* ── RESPONSIVE ─────────────────────────────────── */
+
+    /* iPhone: portrait — bigger touch targets */
+    @media (max-width: 430px) {
+      .check-btn { width: 1.5rem; height: 1.5rem; }
+      li.todo-item { padding: 1rem 0; gap: 1rem; }
+      .item-actions { opacity: 1; pointer-events: auto; }
+      .btn-delete { color: var(--muted) !important; }
+    }
+
+    /* iPhone: landscape */
+    @media (max-width: 932px) and (orientation: landscape) {
+      h1 { font-size: clamp(1.8rem, 5vw, 3rem); }
+      li.todo-item { padding: 0.7rem 0; }
+      .item-actions { opacity: 1; pointer-events: auto; }
+      .btn-delete { color: var(--muted) !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <h1>The Daily List</h1>
+    <nav class="nav-links">
+      <span>Completed</span>
+      <span>Next Week</span>
+      <span>Next Month</span>
+    </nav>
+  </div>
+
+  <div class="add-wrap">
+    <div class="add-row">
+      <input type="text" id="new-item" placeholder="Add new item..." autocomplete="off" autocorrect="off" spellcheck="false" />
+    </div>
+  </div>
+
+  <div class="list-wrap" id="list-container"></div>
+
+</div>
+<script>
+  const KEY = 'daily-list-v2';
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch { return []; }
+  }
+
+  function save(items) {
+    localStorage.setItem(KEY, JSON.stringify(items));
+  }
+
+  function addDays(days) {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    d.setHours(0, 0, 0, 0);
+    return d.getTime();
+  }
+
+  function isVisible(item) {
+    if (!item.deferUntil) return true;
+    return Date.now() >= item.deferUntil;
+  }
+
+  function addItem(text) {
+    if (!text.trim()) return;
+    const items = load();
+    items.unshift({ id: Date.now(), text: text.trim(), done: false, deferUntil: null });
+    save(items);
+    render();
+  }
+
+  function toggleDone(id) {
+    const items = load();
+    const item = items.find(i => i.id === id);
+    if (item) item.done = !item.done;
+    save(items);
+    render();
+  }
+
+  function deleteItem(id) {
+    save(load().filter(i => i.id !== id));
+    render();
+  }
+
+  function defer(id, days) {
+    const items = load();
+    const item = items.find(i => i.id === id);
+    if (item) { item.deferUntil = addDays(days); item.done = false; }
+    save(items);
+    render();
+  }
+
+  function toggleExpand(li) {
+    // mobile tap to reveal actions
+    li.classList.toggle('expanded');
+  }
+
+  function render() {
+    const all    = load();
+    const now    = Date.now();
+    const active = all.filter(i => !i.done && isVisible(i));
+    const done   = all.filter(i => i.done);
+    const deferred = all.filter(i => !i.done && !isVisible(i));
+
+    const container = document.getElementById('list-container');
+    let html = '';
+
+    // Active
+    if (active.length === 0 && done.length === 0) {
+      html += '<p class="empty">Nothing here yet.</p>';
+    } else {
+      html += buildList(active, false);
+    }
+
+    // Completed
+    if (done.length) {
+      html += '<p class="section-label">Completed</p>';
+      html += buildList(done, true);
+    }
+
+    // Deferred (collapsed by default)
+    if (deferred.length) {
+      html += `
+        <div class="deferred-section">
+          <button class="deferred-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.arrow').textContent = this.nextElementSibling.classList.contains('open') ? '−' : '+'">
+            <span>Deferred (${deferred.length})</span>
+            <span class="arrow">+</span>
+          </button>
+          <div class="deferred-list">
+            ${buildList(deferred, false)}
+          </div>
+        </div>`;
+    }
+
+    container.innerHTML = html;
+
+    // Attach tap-expand listeners for mobile
+    container.querySelectorAll('li.todo-item:not(.done)').forEach(li => {
+      li.addEventListener('click', function(e) {
+        // only toggle expand if not clicking a button
+        if (e.target.closest('button')) return;
+        toggleExpand(li);
+      });
+    });
+  }
+
+  function buildList(items, isDone) {
+    if (!items.length) return '';
+    return `<ul class="todo-list">` +
+      items.map(item => `
+        <li class="todo-item${isDone ? ' done' : ''}">
+          <button class="check-btn" onclick="event.stopPropagation(); toggleDone(${item.id})">
+            <span class="check-dot"></span>
+          </button>
+          <div class="item-body">
+            <span class="item-text">${esc(item.text)}</span>
+            ${!isDone ? `
+            <div class="item-actions">
+              <button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 1)">Move to Tomorrow</button>
+              <button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 7)">Move to Next Week</button>
+              <button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 30)">Move to Next Month</button>
+            </div>` : ''}
+          </div>
+          <button class="btn-delete" onclick="event.stopPropagation(); deleteItem(${item.id})">✕</button>
+        </li>`).join('') +
+    `</ul>`;
+  }
+
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Input
+  document.getElementById('new-item').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      addItem(e.target.value);
+      e.target.value = '';
+    }
+  });
+
+  render();
+
+  // Re-render every minute so deferred items surface on time
+  setInterval(render, 60000);
+</script>
+</body>
+</html>
