@@ -3,8 +3,9 @@
     {
       "id": 1779451784939,
       "text": "call dr today",
-      "done": false,
-      "deferUntil": null
+      "done": true,
+      "deferUntil": null,
+      "completedAt": 1779466171447
     },
     {
       "id": 1779451192523,
