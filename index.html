@@ -35,7 +35,6 @@
       padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
     }
 
-    /* top bar */
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -64,6 +63,32 @@
       padding-top: 0.4rem;
       user-select: none;
     }
+
+    .nav-links button {
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: inherit;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: block;
+      margin-left: auto;
+    }
+    .nav-links button:hover { color: var(--brown); }
+
+    .sync-status {
+      font-size: clamp(0.5rem, 1.2vw, 0.6rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+    .sync-status.error { color: #a33; }
+    .sync-status.ok    { color: var(--green); }
 
     /* ── INPUT ──────────────────────────────────────── */
     .add-wrap {
@@ -99,9 +124,7 @@
       padding: clamp(0.8rem, 3vw, 1.5rem) clamp(1.2rem, 5vw, 3rem);
     }
 
-    ul.todo-list {
-      list-style: none;
-    }
+    ul.todo-list { list-style: none; }
 
     li.todo-item {
       display: flex;
@@ -117,7 +140,6 @@
       opacity: 0.4;
     }
 
-    /* circle */
     .check-btn {
       flex-shrink: 0;
       width: clamp(1.1rem, 3vw, 1.4rem);
@@ -145,7 +167,6 @@
     }
     li.done .check-dot { display: block; }
 
-    /* text */
     .item-body { flex: 1; min-width: 0; }
 
     .item-text {
@@ -159,7 +180,6 @@
       display: block;
     }
 
-    /* defer actions — tap/hover to reveal */
     .item-actions {
       display: flex;
       flex-direction: column;
@@ -171,12 +191,10 @@
       transition: opacity 0.18s;
     }
 
-    /* show on hover (desktop) */
     @media (hover: hover) {
       li.todo-item:hover .item-actions { opacity: 1; pointer-events: auto; }
     }
 
-    /* show when expanded (mobile tap) */
     li.todo-item.expanded .item-actions { opacity: 1; pointer-events: auto; }
 
     .btn-defer {
@@ -195,7 +213,6 @@
     .btn-defer:first-child { color: var(--green); }
     .btn-defer:hover, .btn-defer:active { color: var(--green); }
 
-    /* delete */
     .btn-delete {
       flex-shrink: 0;
       background: transparent;
@@ -213,7 +230,6 @@
     li.todo-item.expanded .btn-delete { color: var(--muted); }
     .btn-delete:hover, .btn-delete:active { color: var(--brown) !important; }
 
-    /* ── SECTIONS ───────────────────────────────────── */
     .section-label {
       font-size: clamp(0.58rem, 1.4vw, 0.68rem);
       font-weight: 700;
@@ -235,7 +251,6 @@
       padding-left: clamp(1.8rem, 5vw, 2.8rem);
     }
 
-    /* ── DEFERRED VIEW ──────────────────────────────── */
     .deferred-section { margin-top: 2.5rem; }
 
     .deferred-toggle {
@@ -261,9 +276,89 @@
     .deferred-list { display: none; }
     .deferred-list.open { display: block; }
 
-    /* ── RESPONSIVE ─────────────────────────────────── */
+    /* ── SETTINGS MODAL ─────────────────────────────── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(58,42,26,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      z-index: 50;
+    }
+    .modal-backdrop.open { display: flex; }
 
-    /* iPhone: portrait — bigger touch targets */
+    .modal {
+      background: var(--bg);
+      max-width: 480px;
+      width: 100%;
+      padding: clamp(1.4rem, 4vw, 2rem);
+      border: 1px solid var(--brown);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 {
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      font-style: italic;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--brown);
+      margin-bottom: 1.2rem;
+    }
+    .modal label {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin: 0.8rem 0 0.25rem;
+    }
+    .modal input {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--brown);
+      background: transparent;
+      border: none;
+      border-bottom: 1px dotted var(--muted);
+      padding: 0.35em 0;
+      outline: none;
+    }
+    .modal input:focus { border-bottom-color: var(--brown); }
+    .modal .help {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      line-height: 1.6;
+    }
+    .modal .actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.6rem;
+    }
+    .modal .actions button {
+      font-family: inherit;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: transparent;
+      border: none;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 0.5em 0.2em;
+    }
+    .modal .actions button.primary { color: var(--green); }
+
     @media (max-width: 430px) {
       .check-btn { width: 1.5rem; height: 1.5rem; }
       li.todo-item { padding: 1rem 0; gap: 1rem; }
@@ -271,7 +366,6 @@
       .btn-delete { color: var(--muted) !important; }
     }
 
-    /* iPhone: landscape */
     @media (max-width: 932px) and (orientation: landscape) {
       h1 { font-size: clamp(1.8rem, 5vw, 3rem); }
       li.todo-item { padding: 0.7rem 0; }
@@ -286,9 +380,8 @@
   <div class="topbar">
     <h1>The Daily List</h1>
     <nav class="nav-links">
-      <span>Completed</span>
-      <span>Next Week</span>
-      <span>Next Month</span>
+      <button onclick="openSettings()">Settings</button>
+      <div class="sync-status" id="sync-status">Loading…</div>
     </nav>
   </div>
 
@@ -301,25 +394,240 @@
   <div class="list-wrap" id="list-container"></div>
 
 </div>
-<script>
-  const KEY = 'daily-list-v2';
 
-  function load() {
-    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+<!-- Settings modal -->
+<div class="modal-backdrop" id="settings-modal">
+  <div class="modal">
+    <h2>GitHub Sync</h2>
+
+    <label>Owner (github username)</label>
+    <input type="text" id="cfg-owner" placeholder="e.g. tscarlisle" autocomplete="off" />
+
+    <label>Repository</label>
+    <input type="text" id="cfg-repo" placeholder="e.g. daily-list" autocomplete="off" />
+
+    <label>Branch</label>
+    <input type="text" id="cfg-branch" placeholder="main" autocomplete="off" />
+
+    <label>Data file path</label>
+    <input type="text" id="cfg-path" placeholder="data.json" autocomplete="off" />
+
+    <label>Inbox folder (for reminders import)</label>
+    <input type="text" id="cfg-inbox" placeholder="inbox" autocomplete="off" />
+
+    <label>Personal access token</label>
+    <input type="password" id="cfg-token" placeholder="github_pat_..." autocomplete="off" />
+    <p class="help">
+      Create a fine-grained token at github.com → settings → developer settings → personal access tokens. Give it Contents: Read &amp; Write on this repo only. Stored in your browser, never sent anywhere else.
+    </p>
+
+    <div class="actions">
+      <button onclick="closeSettings()">Cancel</button>
+      <button class="primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ────────────────────────────────────────
+  const CFG_KEY   = 'daily-list-cfg';
+  const CACHE_KEY = 'daily-list-cache';
+  let cfg         = loadCfg();
+  let items       = loadCache();
+  let remoteSha   = null;
+  let saveTimer   = null;
+
+  function loadCfg() {
+    try { return JSON.parse(localStorage.getItem(CFG_KEY)) || {}; }
+    catch { return {}; }
+  }
+  function saveCfg(c) { localStorage.setItem(CFG_KEY, JSON.stringify(c)); }
+
+  function loadCache() {
+    try { return JSON.parse(localStorage.getItem(CACHE_KEY)) || []; }
     catch { return []; }
   }
+  function saveCache(arr) { localStorage.setItem(CACHE_KEY, JSON.stringify(arr)); }
 
-  function save(items) {
-    localStorage.setItem(KEY, JSON.stringify(items));
+  // ── SYNC STATUS ───────────────────────────────────
+  function setStatus(text, kind) {
+    const el = document.getElementById('sync-status');
+    el.textContent = text;
+    el.className = 'sync-status' + (kind ? ' ' + kind : '');
   }
 
+  // ── SETTINGS ──────────────────────────────────────
+  function openSettings() {
+    document.getElementById('cfg-owner').value  = cfg.owner  || '';
+    document.getElementById('cfg-repo').value   = cfg.repo   || '';
+    document.getElementById('cfg-branch').value = cfg.branch || 'main';
+    document.getElementById('cfg-path').value   = cfg.path   || 'data.json';
+    document.getElementById('cfg-inbox').value  = cfg.inbox  || 'inbox';
+    document.getElementById('cfg-token').value  = cfg.token  || '';
+    document.getElementById('settings-modal').classList.add('open');
+  }
+  function closeSettings() {
+    document.getElementById('settings-modal').classList.remove('open');
+  }
+  async function saveSettings() {
+    cfg = {
+      owner:  document.getElementById('cfg-owner').value.trim(),
+      repo:   document.getElementById('cfg-repo').value.trim(),
+      branch: document.getElementById('cfg-branch').value.trim() || 'main',
+      path:   document.getElementById('cfg-path').value.trim()   || 'data.json',
+      inbox:  document.getElementById('cfg-inbox').value.trim()  || 'inbox',
+      token:  document.getElementById('cfg-token').value.trim()
+    };
+    saveCfg(cfg);
+    closeSettings();
+    await syncAll();
+  }
+
+  // ── GITHUB API HELPERS ────────────────────────────
+  function ghReady() {
+    return cfg.owner && cfg.repo && cfg.branch && cfg.path && cfg.token;
+  }
+  function ghHeaders() {
+    return {
+      'Authorization': `Bearer ${cfg.token}`,
+      'Accept': 'application/vnd.github+json'
+    };
+  }
+  function api(path) {
+    return `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${path}`;
+  }
+  function utf8ToB64(s) { return btoa(unescape(encodeURIComponent(s))); }
+  function b64ToUtf8(s) { return decodeURIComponent(escape(atob(s.replace(/\n/g, '')))); }
+
+  // ── REMOTE I/O ────────────────────────────────────
+  async function pullDataFile() {
+    const url = api(`contents/${encodeURIComponent(cfg.path)}?ref=${encodeURIComponent(cfg.branch)}`);
+    const res = await fetch(url, { headers: ghHeaders() });
+    if (res.status === 404) { remoteSha = null; return []; }
+    if (!res.ok) throw new Error(`pull data: ${res.status}`);
+    const json = await res.json();
+    remoteSha = json.sha;
+    const text = b64ToUtf8(json.content);
+    const parsed = JSON.parse(text);
+    return Array.isArray(parsed) ? parsed : (parsed.items || []);
+  }
+
+  async function pushDataFile() {
+    const url = api(`contents/${encodeURIComponent(cfg.path)}`);
+    const body = {
+      message: `update list ${new Date().toISOString()}`,
+      content: utf8ToB64(JSON.stringify({ items }, null, 2)),
+      branch:  cfg.branch
+    };
+    if (remoteSha) body.sha = remoteSha;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(`push data: ${res.status} ${await res.text()}`);
+    const json = await res.json();
+    remoteSha = json.content && json.content.sha ? json.content.sha : remoteSha;
+  }
+
+  // list files in inbox/, fetch each, merge items, delete each
+  async function drainInbox() {
+    if (!cfg.inbox) return 0;
+    const listUrl = api(`contents/${encodeURIComponent(cfg.inbox)}?ref=${encodeURIComponent(cfg.branch)}`);
+    const listRes = await fetch(listUrl, { headers: ghHeaders() });
+    if (listRes.status === 404) return 0; // no inbox yet
+    if (!listRes.ok) throw new Error(`inbox list: ${listRes.status}`);
+    const files = await listRes.json();
+    if (!Array.isArray(files) || files.length === 0) return 0;
+
+    let added = 0;
+    const existing = new Set(items.map(i => i.text.trim().toLowerCase()));
+
+    for (const f of files) {
+      if (f.type !== 'file' || !f.name.endsWith('.json')) continue;
+      // fetch contents
+      const fileRes = await fetch(f.url, { headers: ghHeaders() });
+      if (!fileRes.ok) continue;
+      const fileJson = await fileRes.json();
+      let parsed;
+      try {
+        parsed = JSON.parse(b64ToUtf8(fileJson.content));
+      } catch { continue; }
+      const incoming = Array.isArray(parsed) ? parsed : (parsed.items || []);
+      for (const raw of incoming) {
+        const text = (typeof raw === 'string' ? raw : (raw && raw.text) || '').trim();
+        if (!text) continue;
+        const key = text.toLowerCase();
+        if (existing.has(key)) continue;
+        existing.add(key);
+        items.unshift({ id: Date.now() + Math.floor(Math.random() * 1000), text, done: false, deferUntil: null });
+        added++;
+      }
+      // delete the inbox file
+      await fetch(api(`contents/${encodeURIComponent(cfg.inbox)}/${encodeURIComponent(f.name)}`), {
+        method: 'DELETE',
+        headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `consume inbox ${f.name}`,
+          sha: fileJson.sha,
+          branch: cfg.branch
+        })
+      });
+    }
+    return added;
+  }
+
+  async function syncAll() {
+    if (!ghReady()) {
+      setStatus('Local only — open Settings', 'error');
+      render();
+      return;
+    }
+    setStatus('Syncing…');
+    try {
+      // pull main data
+      const remoteItems = await pullDataFile();
+      items = remoteItems;
+      // process any iPhone Shortcut drops
+      const added = await drainInbox();
+      saveCache(items);
+      if (added > 0) {
+        await pushDataFile();
+        setStatus(`Synced — ${added} from iPhone`, 'ok');
+      } else {
+        setStatus('Synced', 'ok');
+      }
+      render();
+    } catch (err) {
+      console.error(err);
+      setStatus('Offline — using local cache', 'error');
+      render();
+    }
+  }
+
+  async function pushSoon() {
+    saveCache(items);
+    if (!ghReady()) return;
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(async () => {
+      setStatus('Saving…');
+      try {
+        await pushDataFile();
+        setStatus('Synced', 'ok');
+      } catch (err) {
+        console.error(err);
+        setStatus('Save failed — will retry', 'error');
+      }
+    }, 1200);
+  }
+
+  // ── LIST OPS ──────────────────────────────────────
   function addDays(days) {
     const d = new Date();
     d.setDate(d.getDate() + days);
     d.setHours(0, 0, 0, 0);
     return d.getTime();
   }
-
   function isVisible(item) {
     if (!item.deferUntil) return true;
     return Date.now() >= item.deferUntil;
@@ -327,62 +635,49 @@
 
   function addItem(text) {
     if (!text.trim()) return;
-    const items = load();
     items.unshift({ id: Date.now(), text: text.trim(), done: false, deferUntil: null });
-    save(items);
+    pushSoon();
     render();
   }
-
   function toggleDone(id) {
-    const items = load();
     const item = items.find(i => i.id === id);
     if (item) item.done = !item.done;
-    save(items);
+    pushSoon();
     render();
   }
-
   function deleteItem(id) {
-    save(load().filter(i => i.id !== id));
+    items = items.filter(i => i.id !== id);
+    pushSoon();
     render();
   }
-
   function defer(id, days) {
-    const items = load();
     const item = items.find(i => i.id === id);
     if (item) { item.deferUntil = addDays(days); item.done = false; }
-    save(items);
+    pushSoon();
     render();
   }
+  function toggleExpand(li) { li.classList.toggle('expanded'); }
 
-  function toggleExpand(li) {
-    // mobile tap to reveal actions
-    li.classList.toggle('expanded');
-  }
-
+  // ── RENDER ────────────────────────────────────────
   function render() {
-    const all    = load();
-    const now    = Date.now();
-    const active = all.filter(i => !i.done && isVisible(i));
-    const done   = all.filter(i => i.done);
-    const deferred = all.filter(i => !i.done && !isVisible(i));
+    const active   = items.filter(i => !i.done && isVisible(i));
+    const done     = items.filter(i =>  i.done);
+    const deferred = items.filter(i => !i.done && !isVisible(i));
 
     const container = document.getElementById('list-container');
     let html = '';
 
-    // Active
     if (active.length === 0 && done.length === 0) {
       html += '<p class="empty">Nothing here yet.</p>';
     } else {
       html += buildList(active, false);
     }
 
-    // Completed
     if (done.length) {
       html += '<p class="section-label">Completed</p>';
       html += buildList(done, true);
     }
 
-    // Deferred (collapsed by default)
     if (deferred.length) {
       html += `
         <div class="deferred-section">
@@ -398,20 +693,18 @@
 
     container.innerHTML = html;
 
-    // Attach tap-expand listeners for mobile
     container.querySelectorAll('li.todo-item:not(.done)').forEach(li => {
       li.addEventListener('click', function(e) {
-        // only toggle expand if not clicking a button
         if (e.target.closest('button')) return;
         toggleExpand(li);
       });
     });
   }
 
-  function buildList(items, isDone) {
-    if (!items.length) return '';
+  function buildList(list, isDone) {
+    if (!list.length) return '';
     return `<ul class="todo-list">` +
-      items.map(item => `
+      list.map(item => `
         <li class="todo-item${isDone ? ' done' : ''}">
           <button class="check-btn" onclick="event.stopPropagation(); toggleDone(${item.id})">
             <span class="check-dot"></span>
@@ -434,7 +727,7 @@
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // Input
+  // ── INIT ──────────────────────────────────────────
   document.getElementById('new-item').addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       addItem(e.target.value);
@@ -442,10 +735,20 @@
     }
   });
 
+  // first paint from cache so the list shows immediately
   render();
 
-  // Re-render every minute so deferred items surface on time
+  // then pull latest + drain inbox
+  syncAll();
+
+  // re-render every minute so deferred items surface on time
   setInterval(render, 60000);
+
+  // re-sync every 5 minutes to pull in new Shortcut drops
+  setInterval(syncAll, 5 * 60 * 1000);
+
+  // also sync when the tab regains focus
+  window.addEventListener('focus', syncAll);
 </script>
 </body>
 </html>
