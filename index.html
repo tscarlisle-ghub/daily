@@ -371,13 +371,11 @@
       .list-wrap { padding-left: 1.75rem; padding-right: 1.5rem; }
       .check-btn { width: 1.05rem; height: 1.05rem; }
       li.todo-item { padding: 0.25rem 0; gap: 0.8rem; }
-      .item-actions { opacity: 1; pointer-events: auto; }
     }
 
     @media (max-width: 932px) and (orientation: landscape) {
       h1 { font-size: clamp(1.1rem, 3vw, 1.6rem); }
       li.todo-item { padding: 0.2rem 0; }
-      .item-actions { opacity: 1; pointer-events: auto; }
     }
   </style>
 </head>
@@ -681,7 +679,26 @@
     pushSoon();
     render();
   }
-  function toggleExpand(li) { li.classList.toggle('expanded'); }
+  let expandTimer = null;
+  const EXPAND_AUTO_HIDE_MS = 4000;
+
+  function toggleExpand(li) {
+    if (li.classList.contains('expanded')) {
+      li.classList.remove('expanded');
+      if (expandTimer) { clearTimeout(expandTimer); expandTimer = null; }
+      return;
+    }
+    // only one row expanded at a time
+    document.querySelectorAll('li.todo-item.expanded').forEach(other => {
+      if (other !== li) other.classList.remove('expanded');
+    });
+    li.classList.add('expanded');
+    if (expandTimer) clearTimeout(expandTimer);
+    expandTimer = setTimeout(() => {
+      li.classList.remove('expanded');
+      expandTimer = null;
+    }, EXPAND_AUTO_HIDE_MS);
+  }
 
   // ── RENDER ────────────────────────────────────────
   function render() {
