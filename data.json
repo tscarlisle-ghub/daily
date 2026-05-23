@@ -9,8 +9,9 @@
     {
       "id": 1779504686722,
       "text": "think through apps",
-      "done": false,
-      "deferUntil": null
+      "done": true,
+      "deferUntil": null,
+      "completedAt": 1779556798181
     },
     {
       "id": 1779466304137,
@@ -65,13 +66,15 @@
       "id": 1779449958834,
       "text": "ick something reasonable. One year is a good default. (You can always come back and make a new one.) Don't pick \"No expirati",
       "done": true,
-      "deferUntil": null
+      "deferUntil": null,
+      "completedAt": 0
     },
     {
       "id": 1779449955552,
       "text": "ick something reasonable. One year is a good default. (You can always come back and make a new one.) Don't pick \"No expirati",
       "done": true,
-      "deferUntil": null
+      "deferUntil": null,
+      "completedAt": 0
     },
     {
       "id": 1779449947946,
