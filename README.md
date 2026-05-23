@@ -7,6 +7,8 @@ A single-page to-do app with the data stored as `data.json` in this repo. The pa
 - `index.html` — the whole app (HTML + CSS + JS, one file)
 - `data.json` — your list (the "database")
 - `inbox/` — drop folder for iPhone Shortcut imports (auto-created on first import)
+- `SHORTCUT_INSTRUCTIONS.md` — click-by-click instructions for the iPhone Shortcut
+- `SESSION_NOTES.md` — running log of design and behavior decisions
 
 ## One-time setup
 
@@ -53,37 +55,14 @@ Save. You're done. The list now reads from and writes to `data.json` in the repo
 
 ## iPhone Reminders import (via Shortcuts)
 
-Because Apple doesn't let web pages read Reminders, we bridge through the Shortcuts app. The Shortcut grabs your reminders and drops a small JSON file into the `inbox/` folder in this repo. Next time you open the page (or every five minutes while it's open), it merges those items into your list and deletes the inbox file.
+Because Apple doesn't let web pages read Reminders, we bridge through the Shortcuts app. The Shortcut grabs your Today reminders and drops a small JSON file into the `inbox/` folder in this repo. The page picks them up from there: on load, on tab focus, and every five minutes while it's open. It dedupes incoming items against the list by their text, so re-pushing the same reminder multiple times is safe — duplicates won't pile up.
 
-### Build the Shortcut
-
-On your iPhone, open the **Shortcuts** app, tap **+** to make a new one, and add these actions in order:
-
-1. **Find Reminders where** — set filters that match what you want imported (e.g., "List is Inbox" and "Is Completed is false"). The narrower the filter, the less chance of accidentally importing your whole life.
-2. **Repeat with Each** (input: the Reminders from step 1)
-   - inside the loop, add **Get Details of Reminder** → "Title"
-   - then **Add to Variable** → name it `Lines`
-3. After the loop: **Combine Text** with `Lines`, separator: New Lines. That gives you a plain-text list of titles.
-4. **Replace Text** — Find: regex `^(.+)$` (turn on Regular Expression), Replace with: `"$1",`. (This wraps each line in JSON-style quotes.)
-5. **Text** action — content: `{ "items": [ ` + the result of step 4 + ` ] }`. The trailing comma is fine — JSON parsers used here tolerate it; if yours doesn't, add a Replace Text step that strips the last `,`.
-6. **Base64 Encode** the text.
-7. **Get Contents of URL** — this is the actual GitHub API call:
-   - URL: `https://api.github.com/repos/YOURNAME/daily-list/contents/inbox/from-iphone-[CurrentDate].json` (use the Current Date variable, formatted as ISO 8601 without colons — colons aren't allowed in filenames)
-   - Method: **PUT**
-   - Headers:
-     - `Authorization`: `Bearer YOUR_TOKEN`
-     - `Accept`: `application/vnd.github+json`
-   - Request Body: JSON
-     - `message`: `import reminders`
-     - `content`: the base64 string from step 6
-     - `branch`: `main`
-
-Run it. If it returns a 201, the file landed in `inbox/`. Open the page and the items will be in your list within five minutes (or immediately if you trigger a re-sync by refocusing the tab).
+The click-by-click build instructions live in **`SHORTCUT_INSTRUCTIONS.md`** in this folder. That's the "advanced" build — silent "nothing new" path so the morning auto-run isn't noisy, explicit error notification if the GitHub call fails, and a Personal Automation that runs the whole thing at 6:30 AM without you touching anything.
 
 ### Recommendations
 
-- Make a dedicated Reminders list (e.g., "To Daily List") and have the Shortcut only pull from there — that way you stay in control of what gets imported.
-- Pin the Shortcut to your home screen for one-tap import.
+- Use a dedicated Reminders list (e.g., "To Daily List") if you want tight control over what gets imported. The default instructions use the Today smart list, which catches anything due today across all your Reminders lists.
+- Add the Shortcut to Siri so "Hey Siri, Daily List" runs it from your phone or HomePod.
 - The token in the Shortcut is sensitive. Use a fine-grained token scoped only to this repo, with only Contents: Read/Write.
 
 ## How the data file works
@@ -93,17 +72,18 @@ Run it. If it returns a 201, the file landed in `inbox/`. Open the page and the 
 ```json
 {
   "items": [
-    { "id": 1700000000000, "text": "DESIGN DEV REVIEW", "done": false, "deferUntil": null },
-    { "id": 1700000000001, "text": "CALL JANE ABOUT SITE", "done": true,  "deferUntil": null }
+    { "id": 1700000000000, "text": "DESIGN DEV REVIEW", "done": false, "deferUntil": null, "completedAt": null },
+    { "id": 1700000000001, "text": "CALL JANE ABOUT SITE", "done": true,  "deferUntil": null, "completedAt": 1700000300000 }
   ]
 }
 ```
 
 Fields:
-- `id` — a timestamp, used as a unique key
+- `id` — a unique key (created from the timestamp at add-time)
 - `text` — the to-do
 - `done` — true if checked off
 - `deferUntil` — milliseconds-since-epoch; the item hides until that moment. `null` means show now.
+- `completedAt` — milliseconds-since-epoch the item was checked off; the app uses this to keep recently-completed items visible inline for 30 seconds before moving them into the Completed archive. `null` for uncompleted items.
 
 You can hand-edit this file in the GitHub web editor any time — the app re-reads it on load.
 

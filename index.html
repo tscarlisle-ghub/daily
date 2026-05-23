@@ -7,135 +7,119 @@
   <link rel="stylesheet" href="https://use.typekit.net/ikf0hkb.css" />
   <style>
     :root {
-      --bg:     #e8e4db;
-      --brown:  #6b3a1f;
-      --muted:  #b8a898;
-      --green:  #4a6e2a;
-      --ink:    #3a2a1a;
-      --radius: 0;
+      --bg:    #e8e4db;
+      --brown: #6b3a1f;
+      --muted: #b8a898;
+      --green: #4a6e2a;
+      --ink:   #3a2a1a;
+      --red:   #a03020;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      height: 100%;
+      min-height: 100%;
       background: var(--bg);
       color: var(--brown);
       -webkit-font-smoothing: antialiased;
-    }
-
-    body {
       font-family: "acumin-pro-condensed", "acumin-pro", "Arial Narrow", Arial, sans-serif;
     }
 
-    /* ── LAYOUT ─────────────────────────────────────── */
     .page {
-      max-width: 900px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+      padding: clamp(1.5rem, 5vw, 3rem) clamp(1.75rem, 5vw, 3rem) 5rem;
+      padding-top: max(clamp(1.5rem, 5vw, 3rem), env(safe-area-inset-top));
+      padding-bottom: max(5rem, env(safe-area-inset-bottom));
     }
 
+    /* ── HEADER ── */
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: clamp(1.5rem, 5vw, 3rem) clamp(1.75rem, 6vw, 3rem) 0;
+      margin-bottom: clamp(1.2rem, 4vw, 2.2rem);
+      gap: 1rem;
     }
 
     h1 {
-      font-family: "columbia-titling", "columbia", Georgia, "Times New Roman", serif;
-      font-size: clamp(1.2rem, 3.5vw, 2rem);
+      font-family: "columbia-titling", "columbia", Georgia, serif;
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
       font-weight: 400;
       font-style: normal;
-      letter-spacing: 0.005em;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       color: var(--brown);
-      line-height: 1.1;
+      line-height: 1;
     }
 
     .nav-links {
       text-align: right;
-      font-family: "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
-      font-style: italic;
-      font-size: clamp(0.85rem, 1.7vw, 0.95rem);
-      font-weight: 400;
-      letter-spacing: 0;
-      text-transform: none;
-      color: var(--ink);
-      line-height: 1.5;
-      padding-top: 0.9rem;
-      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.25rem;
+      flex-shrink: 0;
     }
 
     .nav-links button {
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-      letter-spacing: inherit;
-      text-transform: inherit;
-      color: inherit;
-      background: transparent;
+      font-family: "interstate", sans-serif;
+      font-size: clamp(0.6rem, 1.4vw, 0.7rem);
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: none;
       border: none;
       cursor: pointer;
       padding: 0;
-      display: block;
-      margin-left: auto;
+      -webkit-tap-highlight-color: transparent;
     }
     .nav-links button:hover { color: var(--brown); }
 
-    .sync-status {
-      font-family: "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
+    #sync-status {
+      font-family: "columbia", Georgia, serif;
       font-style: italic;
-      font-size: clamp(0.7rem, 1.4vw, 0.78rem);
-      letter-spacing: 0;
-      text-transform: none;
+      font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+      letter-spacing: 0.01em;
       color: var(--muted);
-      margin-top: 0.15rem;
-    }
-    .sync-status.error { color: #a33; }
-    .sync-status.ok    { color: var(--green); }
-
-    /* ── INPUT ──────────────────────────────────────── */
-    .add-wrap {
-      padding: clamp(1.2rem, 4vw, 2rem) clamp(1.75rem, 6vw, 3rem) 0;
+      text-transform: none;
+      max-width: 18em;
+      text-align: right;
     }
 
+    /* ── INPUT ── */
     .add-row {
       display: flex;
       align-items: baseline;
       border-bottom: 1px dotted var(--muted);
-      padding-bottom: 0.45em;
+      padding-bottom: 0.5em;
+      margin-bottom: clamp(1.2rem, 4vw, 2rem);
     }
 
     .add-row input {
       flex: 1;
-      font-family: "interstate", "Helvetica Neue", Arial, sans-serif;
-      font-style: normal;
-      font-size: clamp(1rem, 2.2vw, 1.1rem);
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      text-transform: none;
+      font-family: "interstate", sans-serif;
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      font-weight: 500;
+      letter-spacing: 0.04em;
       color: var(--muted);
       background: transparent;
       border: none;
       outline: none;
       caret-color: var(--brown);
     }
-
     .add-row input::placeholder { color: var(--muted); }
     .add-row input:focus { color: var(--brown); }
 
-    /* ── LIST ───────────────────────────────────────── */
-    .list-wrap {
-      padding: clamp(0.8rem, 3vw, 1.5rem) clamp(1.75rem, 6vw, 3rem);
-    }
-
+    /* ── LIST ── */
     ul.todo-list { list-style: none; }
 
     li.todo-item {
       display: flex;
       align-items: flex-start;
-      gap: clamp(0.7rem, 2vw, 1.1rem);
-      padding: clamp(0.22rem, 0.65vw, 0.3rem) 0;
+      gap: clamp(0.8rem, 2.5vw, 1.4rem);
+      padding: clamp(0.22rem, 0.8vw, 0.3rem) 0;
       position: relative;
     }
 
@@ -144,27 +128,27 @@
       opacity: 0.4;
     }
 
+    /* small check circle ~70% size, 1.5px stroke */
     .check-btn {
       flex-shrink: 0;
-      width: clamp(0.78rem, 2.1vw, 0.98rem);
-      height: clamp(0.78rem, 2.1vw, 0.98rem);
+      width: clamp(0.78rem, 2.2vw, 0.98rem);
+      height: clamp(0.78rem, 2.2vw, 0.98rem);
       border-radius: 50%;
       border: 1.5px solid var(--brown);
       background: transparent;
       cursor: pointer;
-      margin-top: 0.45em;
+      margin-top: 0.5em;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.15s, border-color 0.15s;
+      transition: background 0.15s;
       -webkit-tap-highlight-color: transparent;
     }
-    .check-btn:active, .check-btn:hover { background: var(--brown); }
+    .check-btn:hover, .check-btn:active { background: var(--brown); }
     li.done .check-btn { background: var(--muted); border-color: var(--muted); }
 
     .check-dot {
-      width: 38%;
-      height: 38%;
+      width: 38%; height: 38%;
       border-radius: 50%;
       background: var(--bg);
       display: none;
@@ -174,210 +158,190 @@
     .item-body { flex: 1; min-width: 0; }
 
     .item-text {
-      font-size: clamp(1.05rem, 3.2vw, 1.4rem);
-      font-weight: 600;
-      letter-spacing: 0.06em;
+      font-family: "acumin-pro-condensed", "acumin-pro", "Arial Narrow", sans-serif;
+      font-size: clamp(1.05rem, 3.2vw, 1.45rem);
+      font-weight: 700;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
       color: var(--brown);
       word-break: break-word;
-      line-height: 1.3;
+      line-height: 1.25;
       display: block;
     }
 
-    /* defer row */
+    /* defer row — single line, hidden until row expanded */
     .item-actions {
-      font-family: "interstate-condensed", "interstate", "Arial Narrow", Arial, sans-serif;
-      font-style: normal;
-      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 0.45rem;
-      line-height: 1.4;
+      margin-top: 0.25rem;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.18s;
+      font-family: "interstate-condensed", "interstate", "Arial Narrow", sans-serif;
+      font-size: clamp(0.62rem, 1.6vw, 0.74rem);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      line-height: 1.4;
     }
 
     @media (hover: hover) {
       li.todo-item:hover .item-actions { opacity: 1; pointer-events: auto; }
     }
-
     li.todo-item.expanded .item-actions { opacity: 1; pointer-events: auto; }
 
-    .defer-sep {
-      display: inline-block;
-      margin: 0 0.55em;
+    .item-actions .sep {
       color: var(--muted);
-      opacity: 0.55;
+      margin: 0 0.5em;
+      pointer-events: none;
+      user-select: none;
     }
 
     .btn-defer {
-      font-family: inherit;
-      font-style: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-      letter-spacing: inherit;
-      text-transform: inherit;
-      background: transparent;
+      font: inherit;
+      background: none;
       border: none;
       color: var(--ink);
       cursor: pointer;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      transition: color 0.15s;
     }
     .btn-defer:hover, .btn-defer:active { color: var(--green); }
-    .btn-defer.danger:hover, .btn-defer.danger:active { color: #a8392a; }
+    .btn-defer.today { color: var(--green); }
+    .btn-defer.delete:hover, .btn-defer.delete:active { color: var(--red); }
 
-    .section-label {
-      font-family: "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
-      font-size: clamp(0.85rem, 2vw, 1rem);
-      font-style: italic;
-      font-weight: 400;
-      letter-spacing: 0;
-      text-transform: none;
-      color: var(--muted);
-      margin: 2.2rem 0 0.45rem;
-      padding-bottom: 0.4em;
-      border-bottom: 1px solid rgba(107,58,31,0.18);
-    }
-
-    .empty {
-      font-family: "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
-      font-style: italic;
-      font-size: clamp(0.95rem, 2.2vw, 1.05rem);
-      font-weight: 400;
-      letter-spacing: 0;
-      text-transform: none;
-      color: var(--muted);
-      margin-top: 2rem;
-      padding-left: clamp(1.8rem, 5vw, 2.8rem);
-    }
-
+    /* ── SECTIONS ── */
     .collapsible-section { margin-top: 2.5rem; }
 
     .collapsible-toggle {
-      font-family: "columbia", "columbia-serial", Georgia, "Times New Roman", serif;
-      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-family: "columbia", Georgia, serif;
       font-style: italic;
+      font-size: clamp(0.75rem, 1.8vw, 0.88rem);
       font-weight: 400;
-      letter-spacing: 0;
-      text-transform: none;
+      letter-spacing: 0.02em;
       color: var(--muted);
       background: transparent;
       border: none;
-      border-bottom: 1px solid rgba(107,58,31,0.18);
+      border-bottom: 1px solid rgba(107,58,31,0.15);
       width: 100%;
       text-align: left;
-      padding-bottom: 0.4em;
+      padding-bottom: 0.3em;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
     }
     .collapsible-toggle:hover { color: var(--brown); }
-
-    .collapsible-list { display: none; }
+    .collapsible-list { display: none; padding-top: 0.6rem; }
     .collapsible-list.open { display: block; }
 
-    /* ── SETTINGS MODAL ─────────────────────────────── */
+    .empty {
+      font-family: "columbia", Georgia, serif;
+      font-style: italic;
+      font-size: clamp(0.8rem, 2vw, 0.95rem);
+      color: var(--muted);
+      margin-top: 1.5rem;
+    }
+
+    /* ── SETTINGS MODAL ── */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(58,42,26,0.55);
+      background: rgba(58,42,26,0.4);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
-      z-index: 50;
+      z-index: 100;
     }
     .modal-backdrop.open { display: flex; }
 
-    .modal {
+    .modal-body {
       background: var(--bg);
+      border: 1px solid var(--muted);
+      padding: 1.8rem;
       max-width: 480px;
       width: 100%;
-      padding: clamp(1.4rem, 4vw, 2rem);
-      border: 1px solid var(--brown);
       max-height: 90vh;
       overflow-y: auto;
     }
-    .modal h2 {
-      font-size: clamp(1.4rem, 4vw, 1.8rem);
-      font-style: italic;
-      font-weight: 800;
-      text-transform: uppercase;
+
+    .modal-body h2 {
+      font-family: "columbia-titling", "columbia", Georgia, serif;
+      font-weight: 400;
+      font-size: 1.4rem;
       letter-spacing: 0.04em;
+      text-transform: uppercase;
       color: var(--brown);
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.4rem;
     }
-    .modal label {
+
+    .modal-body .modal-intro {
+      font-family: "columbia", Georgia, serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+      line-height: 1.4;
+    }
+
+    .modal-body label {
       display: block;
-      font-size: 0.6rem;
+      margin-bottom: 1rem;
+      font-family: "interstate", sans-serif;
+      font-size: 0.62rem;
       font-weight: 700;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--ink);
-      margin: 0.8rem 0 0.25rem;
     }
-    .modal input {
+
+    .modal-body input {
+      display: block;
       width: 100%;
-      font-family: inherit;
+      margin-top: 0.35rem;
+      padding: 0.4rem 0;
+      font-family: "interstate", sans-serif;
       font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: none;
       color: var(--brown);
       background: transparent;
       border: none;
-      border-bottom: 1px dotted var(--muted);
-      padding: 0.35em 0;
+      border-bottom: 1px solid var(--muted);
       outline: none;
     }
-    .modal input:focus { border-bottom-color: var(--brown); }
-    .modal .help {
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 0.3rem;
-      line-height: 1.6;
-    }
-    .modal .actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: flex-end;
-      margin-top: 1.6rem;
-    }
-    .modal .actions button {
-      font-family: inherit;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      background: transparent;
-      border: none;
-      color: var(--ink);
-      cursor: pointer;
-      padding: 0.5em 0.2em;
-    }
-    .modal .actions button.primary { color: var(--green); }
+    .modal-body input:focus { border-bottom-color: var(--brown); }
 
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1.5rem;
+      margin-top: 1.4rem;
+    }
+
+    .modal-actions button {
+      font-family: "interstate", sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.3em 0;
+      color: var(--ink);
+    }
+    .modal-actions button.primary { color: var(--brown); }
+    .modal-actions button:hover { color: var(--green); }
+
+    /* ── MOBILE ── */
     @media (max-width: 430px) {
-      .topbar   { padding-left: 1.75rem; padding-right: 1.5rem; }
-      .add-wrap { padding-left: 1.75rem; padding-right: 1.5rem; }
-      .list-wrap { padding-left: 1.75rem; padding-right: 1.5rem; }
-      .check-btn { width: 1.05rem; height: 1.05rem; }
-      li.todo-item { padding: 0.25rem 0; gap: 0.8rem; }
-      .item-actions { opacity: 1; pointer-events: auto; }
+      .page { padding-left: 1.75rem; padding-right: 1.75rem; }
+      li.todo-item { padding: 0.28rem 0; }
     }
 
     @media (max-width: 932px) and (orientation: landscape) {
-      h1 { font-size: clamp(1.1rem, 3vw, 1.6rem); }
-      li.todo-item { padding: 0.2rem 0; }
-      .item-actions { opacity: 1; pointer-events: auto; }
+      li.todo-item { padding: 0.22rem 0; }
     }
   </style>
 </head>
@@ -387,251 +351,84 @@
   <div class="topbar">
     <h1>The Daily List</h1>
     <nav class="nav-links">
-      <button onclick="openSettings()">Settings</button>
-      <div class="sync-status" id="sync-status">Loading…</div>
+      <button id="settings-btn">Settings</button>
+      <span id="sync-status">offline</span>
     </nav>
   </div>
 
-  <div class="add-wrap">
-    <div class="add-row">
-      <input type="text" id="new-item" placeholder="Add new item..." autocomplete="off" autocorrect="on" autocapitalize="sentences" spellcheck="true" />
-    </div>
+  <div class="add-row">
+    <input type="text" id="new-item" placeholder="Add new item..."
+      autocomplete="off" spellcheck="true" autocorrect="on" autocapitalize="sentences" />
   </div>
 
-  <div class="list-wrap" id="list-container"></div>
+  <div id="list-container"></div>
 
 </div>
 
-<!-- Settings modal -->
 <div class="modal-backdrop" id="settings-modal">
-  <div class="modal">
-    <h2>GitHub Sync</h2>
-
-    <label>Owner (github username)</label>
-    <input type="text" id="cfg-owner" placeholder="e.g. tscarlisle" autocomplete="off" />
-
-    <label>Repository</label>
-    <input type="text" id="cfg-repo" placeholder="e.g. daily-list" autocomplete="off" />
-
-    <label>Branch</label>
-    <input type="text" id="cfg-branch" placeholder="main" autocomplete="off" />
-
-    <label>Data file path</label>
-    <input type="text" id="cfg-path" placeholder="data.json" autocomplete="off" />
-
-    <label>Inbox folder (for reminders import)</label>
-    <input type="text" id="cfg-inbox" placeholder="inbox" autocomplete="off" />
-
-    <label>Personal access token</label>
-    <input type="password" id="cfg-token" placeholder="github_pat_..." autocomplete="off" />
-    <p class="help">
-      Create a fine-grained token at github.com → settings → developer settings → personal access tokens. Give it Contents: Read &amp; Write on this repo only. Stored in your browser, never sent anywhere else.
-    </p>
-
-    <div class="actions">
-      <button onclick="closeSettings()">Cancel</button>
-      <button class="primary" onclick="saveSettings()">Save</button>
+  <div class="modal-body">
+    <h2>Sync Settings</h2>
+    <p class="modal-intro">Connects this page to a GitHub repo that stores your list as <code>data.json</code>. The token stays in this browser only.</p>
+    <label>Owner <input id="cfg-owner" placeholder="your-github-username" /></label>
+    <label>Repo <input id="cfg-repo" placeholder="daily-list" /></label>
+    <label>Branch <input id="cfg-branch" placeholder="main" /></label>
+    <label>Data file path <input id="cfg-path" placeholder="data.json" /></label>
+    <label>Inbox folder <input id="cfg-inbox" placeholder="inbox" /></label>
+    <label>Personal Access Token <input id="cfg-token" type="password" placeholder="github_pat_..." /></label>
+    <div class="modal-actions">
+      <button id="cfg-cancel">Cancel</button>
+      <button id="cfg-save" class="primary">Save</button>
     </div>
   </div>
 </div>
 
 <script>
-  // ── CONFIG ────────────────────────────────────────
-  const CFG_KEY   = 'daily-list-cfg';
-  const CACHE_KEY = 'daily-list-cache';
-  let cfg         = loadCfg();
-  let items       = loadCache();
-  let remoteSha   = null;
-  let saveTimer   = null;
+  // ── STATE ─────────────────────────────────────────────────────────
+  const STATE_KEY  = 'daily-list-state';
+  const CONFIG_KEY = 'daily-list-config';
 
-  function loadCfg() {
-    try { return JSON.parse(localStorage.getItem(CFG_KEY)) || {}; }
-    catch { return {}; }
-  }
-  function saveCfg(c) { localStorage.setItem(CFG_KEY, JSON.stringify(c)); }
+  const LINGER_MS           = 30_000;
+  const EXPAND_AUTO_HIDE_MS = 4_000;
+  const PUSH_DEBOUNCE_MS    = 700;
+  const PULL_INTERVAL_MS    = 5 * 60_000;
+  const INBOX_INTERVAL_MS   = 5 * 60_000;
+  const RERENDER_INTERVAL_MS = 10_000;
+  const FOCUS_SYNC_MIN_GAP   = 30_000;
 
-  function loadCache() {
-    try { return JSON.parse(localStorage.getItem(CACHE_KEY)) || []; }
-    catch { return []; }
-  }
-  function saveCache(arr) { localStorage.setItem(CACHE_KEY, JSON.stringify(arr)); }
+  let state  = loadState();
+  let config = loadConfig();
 
-  // ── SYNC STATUS ───────────────────────────────────
-  function setStatus(text, kind) {
-    const el = document.getElementById('sync-status');
-    el.textContent = text;
-    el.className = 'sync-status' + (kind ? ' ' + kind : '');
-  }
+  let dirty = false;
+  let pushTimer = null;
+  let activeExpandTimer = null;
+  let lastPullAt  = 0;
+  let lastInboxAt = 0;
 
-  // ── SETTINGS ──────────────────────────────────────
-  function openSettings() {
-    document.getElementById('cfg-owner').value  = cfg.owner  || '';
-    document.getElementById('cfg-repo').value   = cfg.repo   || '';
-    document.getElementById('cfg-branch').value = cfg.branch || 'main';
-    document.getElementById('cfg-path').value   = cfg.path   || 'data.json';
-    document.getElementById('cfg-inbox').value  = cfg.inbox  || 'inbox';
-    document.getElementById('cfg-token').value  = cfg.token  || '';
-    document.getElementById('settings-modal').classList.add('open');
-  }
-  function closeSettings() {
-    document.getElementById('settings-modal').classList.remove('open');
-  }
-  async function saveSettings() {
-    cfg = {
-      owner:  document.getElementById('cfg-owner').value.trim(),
-      repo:   document.getElementById('cfg-repo').value.trim(),
-      branch: document.getElementById('cfg-branch').value.trim() || 'main',
-      path:   document.getElementById('cfg-path').value.trim()   || 'data.json',
-      inbox:  document.getElementById('cfg-inbox').value.trim()  || 'inbox',
-      token:  document.getElementById('cfg-token').value.trim()
-    };
-    saveCfg(cfg);
-    closeSettings();
-    await syncAll();
-  }
-
-  // ── GITHUB API HELPERS ────────────────────────────
-  function ghReady() {
-    return cfg.owner && cfg.repo && cfg.branch && cfg.path && cfg.token;
-  }
-  function ghHeaders() {
-    return {
-      'Authorization': `Bearer ${cfg.token}`,
-      'Accept': 'application/vnd.github+json'
-    };
-  }
-  function api(path) {
-    return `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${path}`;
-  }
-  function utf8ToB64(s) { return btoa(unescape(encodeURIComponent(s))); }
-  function b64ToUtf8(s) { return decodeURIComponent(escape(atob(s.replace(/\n/g, '')))); }
-
-  // ── REMOTE I/O ────────────────────────────────────
-  async function pullDataFile() {
-    const url = api(`contents/${encodeURIComponent(cfg.path)}?ref=${encodeURIComponent(cfg.branch)}`);
-    const res = await fetch(url, { headers: ghHeaders() });
-    if (res.status === 404) { remoteSha = null; return []; }
-    if (!res.ok) throw new Error(`pull data: ${res.status}`);
-    const json = await res.json();
-    remoteSha = json.sha;
-    const text = b64ToUtf8(json.content);
-    const parsed = JSON.parse(text);
-    return Array.isArray(parsed) ? parsed : (parsed.items || []);
-  }
-
-  async function pushDataFile() {
-    const url = api(`contents/${encodeURIComponent(cfg.path)}`);
-    const body = {
-      message: `update list ${new Date().toISOString()}`,
-      content: utf8ToB64(JSON.stringify({ items }, null, 2)),
-      branch:  cfg.branch
-    };
-    if (remoteSha) body.sha = remoteSha;
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) throw new Error(`push data: ${res.status} ${await res.text()}`);
-    const json = await res.json();
-    remoteSha = json.content && json.content.sha ? json.content.sha : remoteSha;
-  }
-
-  // list files in inbox/, fetch each, merge items, delete each
-  async function drainInbox() {
-    if (!cfg.inbox) return 0;
-    const listUrl = api(`contents/${encodeURIComponent(cfg.inbox)}?ref=${encodeURIComponent(cfg.branch)}`);
-    const listRes = await fetch(listUrl, { headers: ghHeaders() });
-    if (listRes.status === 404) return 0; // no inbox yet
-    if (!listRes.ok) throw new Error(`inbox list: ${listRes.status}`);
-    const files = await listRes.json();
-    if (!Array.isArray(files) || files.length === 0) return 0;
-
-    let added = 0;
-    const existing = new Set(items.map(i => i.text.trim().toLowerCase()));
-
-    for (const f of files) {
-      if (f.type !== 'file' || !f.name.endsWith('.json')) continue;
-      // fetch contents
-      const fileRes = await fetch(f.url, { headers: ghHeaders() });
-      if (!fileRes.ok) continue;
-      const fileJson = await fileRes.json();
-      let parsed;
-      try {
-        parsed = JSON.parse(b64ToUtf8(fileJson.content));
-      } catch { continue; }
-      const incoming = Array.isArray(parsed) ? parsed : (parsed.items || []);
-      for (const raw of incoming) {
-        const text = (typeof raw === 'string' ? raw : (raw && raw.text) || '').trim();
-        if (!text) continue;
-        const key = text.toLowerCase();
-        if (existing.has(key)) continue;
-        existing.add(key);
-        items.unshift({ id: Date.now() + Math.floor(Math.random() * 1000), text, done: false, deferUntil: null });
-        added++;
-      }
-      // delete the inbox file
-      await fetch(api(`contents/${encodeURIComponent(cfg.inbox)}/${encodeURIComponent(f.name)}`), {
-        method: 'DELETE',
-        headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `consume inbox ${f.name}`,
-          sha: fileJson.sha,
-          branch: cfg.branch
-        })
-      });
-    }
-    return added;
-  }
-
-  async function syncAll() {
-    if (!ghReady()) {
-      setStatus('Local only — open Settings', 'error');
-      render();
-      return;
-    }
-    setStatus('Syncing…');
+  function loadState() {
     try {
-      // pull main data
-      const remoteItems = await pullDataFile();
-      items = remoteItems;
-      // process any iPhone Shortcut drops
-      const added = await drainInbox();
-      saveCache(items);
-      if (added > 0) {
-        await pushDataFile();
-        setStatus(`Synced — ${added} from iPhone`, 'ok');
-      } else {
-        setStatus('Synced', 'ok');
-      }
-      render();
-    } catch (err) {
-      console.error(err);
-      setStatus('Offline — using local cache', 'error');
-      render();
-    }
+      const raw = localStorage.getItem(STATE_KEY);
+      if (!raw) return { items: [], dataSha: null };
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed.items)) parsed.items = [];
+      return parsed;
+    } catch { return { items: [], dataSha: null }; }
   }
+  function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
 
-  async function pushSoon() {
-    saveCache(items);
-    if (!ghReady()) return;
-    if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(async () => {
-      setStatus('Saving…');
-      try {
-        await pushDataFile();
-        setStatus('Synced', 'ok');
-      } catch (err) {
-        console.error(err);
-        setStatus('Save failed — will retry', 'error');
-      }
-    }, 1200);
+  function loadConfig() {
+    try {
+      const raw = localStorage.getItem(CONFIG_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
   }
+  function saveConfig(c) { localStorage.setItem(CONFIG_KEY, JSON.stringify(c)); config = c; }
 
-  // ── LIST OPS ──────────────────────────────────────
-  function addDays(days) {
+  // ── ITEMS ─────────────────────────────────────────────────────────
+  function newId() { return Date.now() * 1000 + Math.floor(Math.random() * 1000); }
+
+  function addDays(n) {
     const d = new Date();
-    d.setDate(d.getDate() + days);
+    d.setDate(d.getDate() + n);
     d.setHours(0, 0, 0, 0);
     return d.getTime();
   }
@@ -640,147 +437,384 @@
     return Date.now() >= item.deferUntil;
   }
 
-  const RECENT_DONE_MS = 30 * 1000;
-  let archiveCleanupTimer = null;
-
   function addItem(text) {
-    if (!text.trim()) return;
-    items.unshift({ id: Date.now(), text: text.trim(), done: false, deferUntil: null });
-    pushSoon();
-    render();
+    const t = (text || '').trim();
+    if (!t) return;
+    state.items.unshift({
+      id: newId(),
+      text: t,
+      done: false,
+      deferUntil: null,
+      completedAt: null
+    });
+    onChange();
   }
+
   function toggleDone(id) {
-    const item = items.find(i => i.id === id);
+    const item = state.items.find(i => i.id === id);
     if (!item) return;
     item.done = !item.done;
-    if (item.done) {
-      item.completedAt = Date.now();
-      // re-render after the 30s grace so this item slides into the archive
-      if (archiveCleanupTimer) clearTimeout(archiveCleanupTimer);
-      archiveCleanupTimer = setTimeout(render, RECENT_DONE_MS + 200);
-    } else {
-      item.completedAt = null;
-    }
-    pushSoon();
-    render();
+    item.completedAt = item.done ? Date.now() : null;
+    onChange();
   }
-  function deleteItem(id) {
-    items = items.filter(i => i.id !== id);
-    pushSoon();
-    render();
-  }
-  function defer(id, days) {
-    const item = items.find(i => i.id === id);
-    if (item) { item.deferUntil = addDays(days); item.done = false; item.completedAt = null; }
-    pushSoon();
-    render();
-  }
-  function bringToToday(id) {
-    const item = items.find(i => i.id === id);
-    if (item) { item.deferUntil = null; item.done = false; item.completedAt = null; }
-    pushSoon();
-    render();
-  }
-  function toggleExpand(li) { li.classList.toggle('expanded'); }
 
-  // ── RENDER ────────────────────────────────────────
+  function deleteItem(id) {
+    state.items = state.items.filter(i => i.id !== id);
+    onChange();
+  }
+
+  function defer(id, days) {
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+    item.deferUntil = addDays(days);
+    item.done = false;
+    item.completedAt = null;
+    onChange();
+  }
+
+  function bringToToday(id) {
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+    item.deferUntil = null;
+    onChange();
+  }
+
+  function onChange() {
+    saveState();
+    dirty = true;
+    render();
+    schedulePush();
+  }
+
+  // expose for inline onclick handlers
+  window.toggleDone   = toggleDone;
+  window.deleteItem   = deleteItem;
+  window.defer        = defer;
+  window.bringToToday = bringToToday;
+
+  // ── GITHUB SYNC ───────────────────────────────────────────────────
+  function setStatus(msg) {
+    const el = document.getElementById('sync-status');
+    if (el) el.textContent = msg;
+  }
+
+  function ghHeaders() {
+    return {
+      'Authorization': 'token ' + config.token,
+      'Accept': 'application/vnd.github+json'
+    };
+  }
+
+  function b64encode(s) { return btoa(unescape(encodeURIComponent(s))); }
+  function b64decode(s) {
+    try { return decodeURIComponent(escape(atob((s || '').replace(/\s/g, '')))); }
+    catch { return ''; }
+  }
+
+  async function ghGet(path) {
+    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${encodeURI(path)}?ref=${encodeURIComponent(config.branch)}`;
+    const res = await fetch(url, { headers: ghHeaders() });
+    if (res.status === 404) return null;
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(`${res.status}: ${err.message || res.statusText}`);
+    }
+    return await res.json();
+  }
+
+  async function ghPut(path, contentJson, sha, message) {
+    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${encodeURI(path)}`;
+    const body = {
+      message: message || 'Daily List update',
+      content: b64encode(contentJson),
+      branch: config.branch
+    };
+    if (sha) body.sha = sha;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      const e = new Error(err.message || res.statusText);
+      e.status = res.status;
+      throw e;
+    }
+    return await res.json();
+  }
+
+  async function ghDelete(path, sha) {
+    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${encodeURI(path)}`;
+    const res = await fetch(url, {
+      method: 'DELETE',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Drain inbox file',
+        sha,
+        branch: config.branch
+      })
+    });
+    if (!res.ok && res.status !== 404) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(`DELETE: ${err.message || res.statusText}`);
+    }
+  }
+
+  function schedulePush() {
+    if (!config) return;
+    if (pushTimer) clearTimeout(pushTimer);
+    pushTimer = setTimeout(() => push(), PUSH_DEBOUNCE_MS);
+    setStatus('saving…');
+  }
+
+  async function push(retry = false) {
+    if (!config) { setStatus('not connected · Settings →'); return; }
+    pushTimer = null;
+    try {
+      const payload = JSON.stringify({ items: state.items }, null, 2);
+      const result = await ghPut(config.path, payload, state.dataSha, 'Daily List update');
+      state.dataSha = result.content.sha;
+      dirty = false;
+      saveState();
+      lastPullAt = Date.now();
+      setStatus(`saved · ${timeNow()}`);
+    } catch (e) {
+      if (!retry && (e.status === 409 || /sha/i.test(e.message))) {
+        try {
+          const remote = await ghGet(config.path);
+          if (remote) {
+            state.dataSha = remote.sha;
+            saveState();
+          }
+          return push(true);
+        } catch (e2) {
+          setStatus('save failed · ' + e2.message);
+          return;
+        }
+      }
+      setStatus('save failed · ' + e.message);
+    }
+  }
+
+  async function pull() {
+    if (!config) return;
+    if (dirty) return;
+    try {
+      const remote = await ghGet(config.path);
+      if (!remote) {
+        if (state.items.length > 0) {
+          await push();
+        } else {
+          setStatus('connected · empty');
+        }
+        lastPullAt = Date.now();
+        return;
+      }
+      const text = b64decode(remote.content);
+      let parsed;
+      try { parsed = JSON.parse(text); }
+      catch { parsed = { items: [] }; }
+      state.items = Array.isArray(parsed.items) ? parsed.items : [];
+      // ensure completedAt exists on done items so the linger logic works
+      for (const it of state.items) {
+        if (it.done && !it.completedAt) it.completedAt = 0; // already-archived
+      }
+      state.dataSha = remote.sha;
+      saveState();
+      lastPullAt = Date.now();
+      render();
+      setStatus(`synced · ${timeNow()}`);
+    } catch (e) {
+      setStatus('sync failed · ' + e.message);
+    }
+  }
+
+  async function drainInbox() {
+    if (!config) return;
+    try {
+      const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${encodeURI(config.inboxPath)}?ref=${encodeURIComponent(config.branch)}`;
+      const res = await fetch(url, { headers: ghHeaders() });
+      if (res.status === 404) { lastInboxAt = Date.now(); return; }
+      if (!res.ok) { lastInboxAt = Date.now(); return; }
+      const listing = await res.json();
+      if (!Array.isArray(listing) || listing.length === 0) {
+        lastInboxAt = Date.now();
+        return;
+      }
+      // Newest file at top of merged list — sort DESC by name (timestamp)
+      const files = listing.filter(f => f.name && f.name.endsWith('.json'))
+                           .sort((a, b) => b.name.localeCompare(a.name));
+
+      const existing = new Set(state.items.map(i => (i.text || '').trim().toLowerCase()));
+      const newItems = [];
+
+      for (const file of files) {
+        try {
+          const r = await fetch(file.url, { headers: ghHeaders() });
+          if (!r.ok) continue;
+          const meta = await r.json();
+          const text = b64decode(meta.content);
+          const data = JSON.parse(text);
+          const incoming = Array.isArray(data.items) ? data.items : [];
+          for (const inc of incoming) {
+            const txt = (inc && inc.text || '').trim();
+            const key = txt.toLowerCase();
+            if (!txt || existing.has(key)) continue;
+            existing.add(key);
+            newItems.push({
+              id: newId(),
+              text: txt,
+              done: false,
+              deferUntil: null,
+              completedAt: null
+            });
+          }
+          await ghDelete(file.path, meta.sha);
+        } catch {
+          // skip this file but keep going
+        }
+      }
+
+      if (newItems.length > 0) {
+        state.items = [...newItems, ...state.items];
+        saveState();
+        dirty = true;
+        render();
+        schedulePush();
+      }
+      lastInboxAt = Date.now();
+    } catch {
+      // inbox failures shouldn't block other work
+      lastInboxAt = Date.now();
+    }
+  }
+
+  function timeNow() {
+    return new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+
+  // ── RENDER ────────────────────────────────────────────────────────
+  function esc(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function buildRow(item, opts) {
+    const isDone     = !!(opts && opts.isDone);
+    const isDeferred = !!(opts && opts.isDeferred);
+    const actions = [];
+
+    if (isDeferred) {
+      actions.push(`<button class="btn-defer today" onclick="event.stopPropagation();bringToToday(${item.id})">Today</button>`);
+    }
+    if (!isDone) {
+      actions.push(`<button class="btn-defer" onclick="event.stopPropagation();defer(${item.id},1)">Tomorrow</button>`);
+      actions.push(`<button class="btn-defer" onclick="event.stopPropagation();defer(${item.id},7)">Next Week</button>`);
+      actions.push(`<button class="btn-defer" onclick="event.stopPropagation();defer(${item.id},30)">Next Month</button>`);
+    }
+    actions.push(`<button class="btn-defer delete" onclick="event.stopPropagation();deleteItem(${item.id})">Delete</button>`);
+
+    const actionsHtml = actions.map((a, i) =>
+      i === 0 ? a : `<span class="sep">·</span>${a}`
+    ).join('');
+
+    return `
+      <li class="todo-item${isDone ? ' done' : ''}" data-id="${item.id}">
+        <button class="check-btn" onclick="event.stopPropagation();toggleDone(${item.id})">
+          <span class="check-dot"></span>
+        </button>
+        <div class="item-body">
+          <span class="item-text">${esc(item.text)}</span>
+          <div class="item-actions">${actionsHtml}</div>
+        </div>
+      </li>`;
+  }
+
+  function buildList(items, opts) {
+    if (!items.length) return '';
+    return '<ul class="todo-list">' + items.map(i => buildRow(i, opts)).join('') + '</ul>';
+  }
+
   function render() {
-    const now      = Date.now();
-    const active   = items.filter(i => !i.done && isVisible(i));
-    const recent   = items.filter(i =>  i.done &&  i.completedAt && (now - i.completedAt) <  RECENT_DONE_MS);
-    const archive  = items.filter(i =>  i.done && (!i.completedAt || (now - i.completedAt) >= RECENT_DONE_MS));
-    const deferred = items.filter(i => !i.done && !isVisible(i));
+    const all = state.items;
+    const now = Date.now();
+    const active       = all.filter(i => !i.done && isVisible(i));
+    const recentDone   = all.filter(i => i.done && i.completedAt && (now - i.completedAt) < LINGER_MS);
+    const archivedDone = all.filter(i => i.done && (!i.completedAt || (now - i.completedAt) >= LINGER_MS));
+    const deferred     = all.filter(i => !i.done && !isVisible(i));
+
+    // Active list = currently active items + items that have just been checked (linger)
+    const visible = [
+      ...active.map(i => ({ item: i, isDone: false })),
+      ...recentDone.map(i => ({ item: i, isDone: true }))
+    ];
 
     const container = document.getElementById('list-container');
     let html = '';
 
-    if (active.length === 0 && recent.length === 0 && archive.length === 0 && deferred.length === 0) {
+    if (!visible.length && !archivedDone.length && !deferred.length) {
       html += '<p class="empty">Nothing here yet.</p>';
+    } else if (visible.length) {
+      html += '<ul class="todo-list">' + visible.map(v => buildRow(v.item, { isDone: v.isDone })).join('') + '</ul>';
     } else {
-      html += buildList(active, 'active');
+      html += '<p class="empty">All clear for today.</p>';
     }
 
-    if (recent.length) {
-      html += buildList(recent, 'recent');
-    }
-
-    if (archive.length) {
+    if (archivedDone.length) {
       html += `
         <div class="collapsible-section">
-          <button class="collapsible-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.arrow').textContent = this.nextElementSibling.classList.contains('open') ? '−' : '+'">
-            <span>Completed (${archive.length})</span>
+          <button class="collapsible-toggle" data-name="done">
+            <span>Completed (${archivedDone.length})</span>
             <span class="arrow">+</span>
           </button>
-          <div class="collapsible-list">
-            ${buildList(archive, 'archive')}
-          </div>
+          <div class="collapsible-list">${buildList(archivedDone, { isDone: true })}</div>
         </div>`;
     }
 
     if (deferred.length) {
       html += `
         <div class="collapsible-section">
-          <button class="collapsible-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.arrow').textContent = this.nextElementSibling.classList.contains('open') ? '−' : '+'">
+          <button class="collapsible-toggle" data-name="deferred">
             <span>Deferred (${deferred.length})</span>
             <span class="arrow">+</span>
           </button>
-          <div class="collapsible-list">
-            ${buildList(deferred, 'deferred')}
-          </div>
+          <div class="collapsible-list">${buildList(deferred, { isDeferred: true })}</div>
         </div>`;
     }
 
     container.innerHTML = html;
 
-    container.querySelectorAll('li.todo-item:not(.done)').forEach(li => {
+    // Collapsible toggles
+    container.querySelectorAll('.collapsible-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const list = btn.nextElementSibling;
+        list.classList.toggle('open');
+        const arrow = btn.querySelector('.arrow');
+        if (arrow) arrow.textContent = list.classList.contains('open') ? '−' : '+';
+      });
+    });
+
+    // Row tap-to-expand (mobile) with auto-hide
+    container.querySelectorAll('li.todo-item').forEach(li => {
       li.addEventListener('click', function(e) {
         if (e.target.closest('button')) return;
-        toggleExpand(li);
+        // Only one row expanded at a time
+        document.querySelectorAll('li.todo-item.expanded').forEach(other => {
+          if (other !== li) other.classList.remove('expanded');
+        });
+        li.classList.toggle('expanded');
+        if (activeExpandTimer) { clearTimeout(activeExpandTimer); activeExpandTimer = null; }
+        if (li.classList.contains('expanded')) {
+          activeExpandTimer = setTimeout(() => {
+            li.classList.remove('expanded');
+            activeExpandTimer = null;
+          }, EXPAND_AUTO_HIDE_MS);
+        }
       });
     });
   }
 
-  function buildList(list, kind) {
-    if (!list.length) return '';
-    const isDone = kind === 'recent' || kind === 'archive';
-    return `<ul class="todo-list">` +
-      list.map(item => {
-        let actions = '';
-        if (kind === 'active') {
-          actions = `
-            <div class="item-actions">
-              <button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 1)">Tomorrow</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 7)">Next Week</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 30)">Next Month</button><span class="defer-sep">·</span><button class="btn-defer danger" onclick="event.stopPropagation(); deleteItem(${item.id})">Delete</button>
-            </div>`;
-        } else if (kind === 'deferred') {
-          actions = `
-            <div class="item-actions">
-              <button class="btn-defer" onclick="event.stopPropagation(); bringToToday(${item.id})">Today</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 1)">Tomorrow</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 7)">Next Week</button><span class="defer-sep">·</span><button class="btn-defer" onclick="event.stopPropagation(); defer(${item.id}, 30)">Next Month</button><span class="defer-sep">·</span><button class="btn-defer danger" onclick="event.stopPropagation(); deleteItem(${item.id})">Delete</button>
-            </div>`;
-        } else if (kind === 'archive') {
-          actions = `
-            <div class="item-actions">
-              <button class="btn-defer danger" onclick="event.stopPropagation(); deleteItem(${item.id})">Delete</button>
-            </div>`;
-        }
-        return `
-        <li class="todo-item${isDone ? ' done' : ''}">
-          <button class="check-btn" onclick="event.stopPropagation(); toggleDone(${item.id})">
-            <span class="check-dot"></span>
-          </button>
-          <div class="item-body">
-            <span class="item-text">${esc(item.text)}</span>
-            ${actions}
-          </div>
-        </li>`;
-      }).join('') +
-    `</ul>`;
-  }
-
-  function esc(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  // ── INIT ──────────────────────────────────────────
+  // ── EVENT WIRING ──────────────────────────────────────────────────
   document.getElementById('new-item').addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       addItem(e.target.value);
@@ -788,20 +822,67 @@
     }
   });
 
-  // first paint from cache so the list shows immediately
+  const modal = document.getElementById('settings-modal');
+  document.getElementById('settings-btn').addEventListener('click', () => {
+    document.getElementById('cfg-owner').value  = (config && config.owner)  || '';
+    document.getElementById('cfg-repo').value   = (config && config.repo)   || '';
+    document.getElementById('cfg-branch').value = (config && config.branch) || 'main';
+    document.getElementById('cfg-path').value   = (config && config.path)   || 'data.json';
+    document.getElementById('cfg-inbox').value  = (config && config.inboxPath) || 'inbox';
+    document.getElementById('cfg-token').value  = (config && config.token)  || '';
+    modal.classList.add('open');
+  });
+  document.getElementById('cfg-cancel').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => {
+    if (e.target === modal) modal.classList.remove('open');
+  });
+  document.getElementById('cfg-save').addEventListener('click', () => {
+    const newConfig = {
+      owner:     document.getElementById('cfg-owner').value.trim(),
+      repo:      document.getElementById('cfg-repo').value.trim(),
+      branch:    document.getElementById('cfg-branch').value.trim() || 'main',
+      path:      document.getElementById('cfg-path').value.trim() || 'data.json',
+      inboxPath: document.getElementById('cfg-inbox').value.trim() || 'inbox',
+      token:     document.getElementById('cfg-token').value.trim()
+    };
+    if (!newConfig.owner || !newConfig.repo || !newConfig.token) {
+      setStatus('settings: owner, repo, and token are required');
+      return;
+    }
+    saveConfig(newConfig);
+    // reset SHA — pull will re-discover it
+    state.dataSha = null;
+    saveState();
+    modal.classList.remove('open');
+    setStatus('connecting…');
+    pull().then(drainInbox);
+  });
+
+  // Initial render + connect
   render();
+  if (config) {
+    setStatus('connecting…');
+    pull().then(drainInbox);
+  } else {
+    setStatus('not connected · Settings →');
+  }
 
-  // then pull latest + drain inbox
-  syncAll();
+  // Periodic re-render so deferred items surface and the 30s linger expires
+  setInterval(render, RERENDER_INTERVAL_MS);
 
-  // re-render every minute so deferred items surface on time
-  setInterval(render, 60000);
+  // Periodic sync
+  setInterval(() => {
+    if (!config) return;
+    if (Date.now() - lastPullAt  > PULL_INTERVAL_MS)  pull();
+    if (Date.now() - lastInboxAt > INBOX_INTERVAL_MS) drainInbox();
+  }, 60_000);
 
-  // re-sync every 5 minutes to pull in new Shortcut drops
-  setInterval(syncAll, 5 * 60 * 1000);
-
-  // also sync when the tab regains focus
-  window.addEventListener('focus', syncAll);
+  // On focus, sync if enough time has passed
+  window.addEventListener('focus', () => {
+    if (!config) return;
+    if (Date.now() - lastPullAt  > FOCUS_SYNC_MIN_GAP) pull();
+    if (Date.now() - lastInboxAt > FOCUS_SYNC_MIN_GAP) drainInbox();
+  });
 </script>
 </body>
 </html>
