@@ -10,9 +10,9 @@
     {
       "id": 1779504701153,
       "text": "book hotel and flights for colorado",
-      "done": false,
+      "done": true,
       "deferUntil": 1779598800000,
-      "completedAt": null
+      "completedAt": 1779824918804
     },
     {
       "id": 1779504686722,
